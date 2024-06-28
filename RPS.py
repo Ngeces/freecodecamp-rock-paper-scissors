@@ -1,4 +1,5 @@
 # The example function below keeps track of the opponent's history and plays whatever the opponent played two plays ago. It is not a very good player so you will need to change the code to pass the challenge.
+# idea from https://github.com/Captainspockears/freecodecampMLprojects/blob/master/RockPaperScissor/RPS.py
 from RPS_game import play, mrugesh, abbey, quincy, kris
 
 def player(prev_play, player_history=[], opponent_history=[], play_order = [{
@@ -25,31 +26,37 @@ def player(prev_play, player_history=[], opponent_history=[], play_order = [{
         return 'P'
     
     enemy = "".join(opponent_history[1:4])
+    prev_opponent_play = player_history[-1]
+
+
     if enemy == 'RPP':
       choices = ["R", "R", "P", "P", "S"]
       next_move = choices[(len(player_history) + 1)% len(choices)]
       guess = ideal_response[next_move]
 
     if enemy == 'PPS':
+        
+        if not prev_opponent_play:
+            prev_opponent_play = 'R'
+
+
         last_two = "".join(player_history[-2:])
         if len(last_two) == 2:
             play_order[0][last_two] += 1
 
         potential_plays = [
-            player_history[-1] + "R",
-            player_history[-1] + "P",
-            player_history[-1] + "S",
+            prev_opponent_play + "R",
+            prev_opponent_play + "P",
+            prev_opponent_play + "S",
         ]
 
         sub_order = {
-          k: play_order[0][k]
-          for k in potential_plays if k in play_order[0]
+            k: play_order[0][k]
+            for k in potential_plays if k in play_order[0]
         }
 
         prediction = max(sub_order, key=sub_order.get)[-1:]
-
-        next_move = ideal_response[prediction]
-        guess = ideal_response[next_move]
+        guess = ideal_response[ideal_response[prediction]]
 
     if enemy == 'PSS':
         next_move = ideal_response[player_history[-1]]
