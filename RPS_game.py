@@ -84,7 +84,6 @@ def abbey(prev_opponent_play,
               "SP": 0,
               "SS": 0,
           }]):
-
     if not prev_opponent_play:
         prev_opponent_play = 'R'
     opponent_history.append(prev_opponent_play)
